@@ -17,6 +17,8 @@ public class Terminal {
     private Scanner SCANNER = new Scanner(System.in);
 
     private enum Command {
+        LS("ls","Check files inside the current directory."),
+        LS_LA("ls -la","Show a detailed list of the files inside the current directory"),
         HELP("help","Display all the available commands."),
         EXIT("exit", "Exit the terminal."),
         ABOUT("about","Basic description & Author.");
@@ -61,9 +63,13 @@ public class Terminal {
     }
 
     private void initialize() {
+        loadDefaultFolders();
         waitForCommand();
-        Folder testFolder = new Folder("test");
-        print(testFolder.getName() + " " + testFolder.getLastModifiedTime());
+    }
+
+    private void loadDefaultFolders() {
+        Folder testFolder = new Folder("test", null, "1");
+        FOLDERS.add(testFolder);
     }
 
     private void waitForCommand() {
@@ -92,6 +98,12 @@ public class Terminal {
                     print(ANSI_RESET + ANSI_BOLD + CommandDialog.HELP.dialogValue);
                     printAllCommands();
                     break;
+                case LS:
+                    listFiles();
+                    break;
+                case LS_LA:
+                    listDetailedFiles();
+                    break;
                 case EXIT:
                     System.exit(0);
                     break;
@@ -103,7 +115,7 @@ public class Terminal {
     }
 
     private void print(String line) {
-        System.out.println(line);
+        System.out.println(ANSI_RESET + line);
     }
 
     private void about() {
@@ -113,7 +125,23 @@ public class Terminal {
 
     private void printAllCommands() {
         for (Command command : Command.values()) {
-            print(ANSI_RESET + ANSI_BOLD + command.getCommandValue() + ": " + ANSI_RESET + command.getDescription());
+            print(ANSI_BOLD + command.getCommandValue() + ": " + ANSI_RESET + command.getDescription());
+        }
+    }
+
+    private void listFiles() {
+        for(Folder folder : FOLDERS) {
+            print(folder.getName());
+        }
+    }
+    private void listDetailedFiles() {
+        print("total " + FOLDERS.size());
+        for(Folder folder : FOLDERS) {
+            print(
+                folder.getPermissions() + "\t" + folder.getHardLinksCount() + "\t" +
+                folder.getAuthor() + "\t" + folder.getDiskBlockCount() + "\t" + folder.getLastModifiedTime() + "\t" +
+                folder.getName()
+            );
         }
     }
 }
