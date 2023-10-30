@@ -91,7 +91,7 @@ public class Terminal {
         createFolder("media",CURRENT_PATH,null,"1");
         createFolder("usr",CURRENT_PATH,null,"1");
         createFolder("var",CURRENT_PATH,null,"1");
-        createFolder(USER,"~/usr",null,"1");
+        createFolder(USER,"~/usr",null,"2");
     }
 
     private void waitForCommand() {
@@ -215,13 +215,14 @@ public class Terminal {
     }
 
     private void listDetailedFiles() {
-        print("total " + FOLDERS.size());
         for(Folder folder : FOLDERS) {
-            print(
-                folder.getPermissions() + "\t" + folder.getHardLinksCount() + "\t" +
-                folder.getAuthor() + "\t" + folder.getDiskBlockCount() + "\t" + folder.getLastModifiedTime() + "\t" +
-                folder.getName()
-            );
+            if(folder.getPath().equals(CURRENT_PATH)) {
+                print(
+                        folder.getPermissions() + "\t" + folder.getHardLinksCount() + "\t" +
+                                folder.getAuthor() + "\t" + folder.getDiskBlockCount() + "\t" + folder.getLastModifiedTime() + "\t" +
+                                folder.getName()
+                );
+            }
         }
     }
 
